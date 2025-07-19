@@ -5,8 +5,8 @@ param (
 )
 
 # Variables
-$subscriptionId = "<subscription-id>"
-$resourceGroup = "<fabric-capacity-rg-name>"
+$subscriptionId = "<your-subscription-id>"
+$resourceGroup = "<your-resource-group>"
 $capacityName = "<fabric-capacity-name>"
 $apiVersion = "2023-11-01"
 
@@ -15,18 +15,13 @@ Connect-AzAccount -Identity
 Set-AzContext -SubscriptionId $subscriptionId
 
 # Perform the requested action
-if ($Action -eq "Start") {
-    Start-AzResource -ResourceType "Microsoft.Fabric/capacities" `
-                     -ResourceName $capacityName `
-                     -ResourceGroupName $resourceGroup `
-                     -ApiVersion $apiVersion
-    Write-Output "Fabric capacity started."
-}
-elseif ($Action -eq "Stop") {
-    Stop-AzResource -ResourceType "Microsoft.Fabric/capacities" `
-                    -ResourceName $capacityName `
-                    -ResourceGroupName $resourceGroup `
-                    -ApiVersion $apiVersion
-    Write-Output "Fabric capacity stopped."
-}
+Invoke-AzResourceAction `
+    -ResourceGroupName $resourceGroup `
+    -ResourceType "Microsoft.Fabric/capacities" `
+    -ResourceName $capacityName `
+    -Action $Action.ToLower() `
+    -ApiVersion $apiVersion `
+    -Force
+
+Write-Output "Fabric capacity $Action command sent."
 
