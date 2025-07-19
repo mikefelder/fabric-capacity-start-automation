@@ -1,6 +1,6 @@
 param (
     [Parameter(Mandatory=$true)]
-    [ValidateSet("Start", "Stop")]
+    [ValidateSet("resume", "suspend")]
     [string]$Action
 )
 
