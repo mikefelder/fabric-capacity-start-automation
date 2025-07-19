@@ -4,52 +4,52 @@ This guide provides instructions to set up an Azure Automation Runbook that acce
 
 ## Step 1: Create an Automation Account
 
-1. Go to [https://portal.azure.com](https://portal.azure.com).
-2. Search for **Automation Accounts** and click **+ Create**.
-3. Fill in the required fields (Name, Resource Group, Region).
-4. Click **Review + Create**, then **Create**.
+1. Go to [https://portal.azure.com](https://portal.azure.com)
+2. Search for **Automation Accounts** and click **+ Create**
+3. Fill in the required fields (Name, Resource Group, Region)
+4. Click **Review + Create**, then **Create**
 
 ## Step 2: Enable System-Assigned Managed Identity
 
-1. In the Automation Account, go to **Identity**.
-2. Under **System assigned**, switch the status to **On**.
-3. Click **Save**.
+1. In the Automation Account, go to **'Account Settings' ➡ 'Identity'**
+2. Under **System assigned**, switch the status to **On**
+3. Click **Save**
 
 ## Step 3: Assign Permissions to the Managed Identity
 
-1. Go to the Fabric capacity resource in Azure.
-2. Open **Access Control (IAM)** > **+ Add role assignment**.
-3. Assign the **Contributor** role to the Automation Account’s managed identity.
-4. Scope it to the Fabric capacity resource only.
+1. In the Azure Portal, navigate to the **Fabric capacity resource** in Azure
+2. Open **'Access Control (IAM)' ➡ '➕ Add' ➡ '➕ Add role assignment'**
+3. Select the **'Privileged administrator roles'** tab
+4. Select the **Contributor** role and select **Next** to move to the Members tab
+5. Under **'Assign access to'**, select **'Managed identity'** 
+6. Under **Members**, click **'➕ Select members'*** to open the selection pane
+7. Select **'Automation Account (N)'** under the **'System-assigned managed identity'** section
+8. Select the Automation Account’s managed identity
+6. At the bottom, select **Next**, and then **'Review + Assign'** to complete the assignment
 
-## Step 4: Import Required Modules
+## Step 4: Create the Runbook
 
-1. In the Automation Account, go to **Modules** > **Browse Gallery**.
-2. Import `Az.Accounts` and `Az.Resources`.
-3. Wait for the modules to finish importing.
+1. Go to **'Process Automation' ➡ 'Runbooks' ➡ '➕ Create a runbook'**
+2. Name it `StartStopFabricCapacity`
+3. Choose **PowerShell** as the Runbook type
+4. Choose the recommended version for Runtime version
+5. Click **Create**
 
-## Step 5: Create the Runbook
+## Step 5: Add the Script to Runbook
 
-1. Go to **Runbooks** > **+ Create a runbook**.
-2. Name it `StartStopFabricCapacity`.
-3. Choose **PowerShell** as the Runbook type.
-4. Click **Create**.
-
-## Step 6: Add the Script
-
-1. Paste the PowerShell script provided into the Runbook editor.
+1. Paste the PowerShell script provided into the Runbook editor
 2. Replace:
 - `<subscription-id>` with Azure subscription ID
 - `<fabric-capacity-rg-name>` with targeted resource group name
 - `<fabric-capacity-name>` with targeted fabric capacity resource name
 
-## Step 7: Publish the Runbook
+## Step 6: Publish the Runbook
 
 1. Click **Save** and then **Publish**.
 
-## Step 8: Create a Webhook
+## Step 7: Create a Webhook
 
-1. In the Runbook, go to **Webhook** > **+ Add Webhook**.
-2. Name it and set an expiration date.
-3. Copy the Webhook URL (shown only once).
-4. Click **OK** to create and enable the webhook.
+1. In the Runbook, go to **Resources ➡ Webhook ➡ '➕ Add Webhook'**
+2. Name it `StartStopFabricCapacity-wh` and set an expiration date (default is one year)
+3. _**Copy the Webhook URL (shown only once)**_
+4. Click **OK** to create and enable the webhook
