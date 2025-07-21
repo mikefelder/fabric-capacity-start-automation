@@ -1,5 +1,9 @@
 # Azure Automation Runbook Setup for Fabric Capacity Control
 
+> [!CAUTION]
+> **07/21/2025: This PowerShell runbook script is currently not working as intended and is being revised**.
+
+
 This guide provides instructions to set up an Azure Automation Runbook that accepts `Start` and `Stop` inputs via webhook. The Runbook will control the running state of a Microsoft Fabric capacity resource.
 
 ## Step 1: Create an Automation Account
