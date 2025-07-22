@@ -2,21 +2,6 @@
 
 > A complete solution for automating Azure Fabric capacity start/stop operations using Azure Runbooks and webhooks. This enables cost optimization by programmatically controlling Fabric capacities through HTTP requests, Power Automate flows, or any system that can make REST API calls.
 
-## Overview
-
-This repository provides:
-- PowerShell runbook for Azure Automation that can suspend/resume Fabric capacities
-- Webhook-based invocation for integration with external systems
-- Support for Power Automate workflows
-- Cost optimization through automated capacity management
-
-## Prerequisites
-
-- Azure subscription with appropriate permissions
-- Azure Automation Account
-- Microsoft Fabric capacity deployed
-- PowerShell execution policy allowing script execution
-
 ## Architecture
 
 ```
@@ -66,8 +51,7 @@ The runbook requires Azure PowerShell modules:
 3. Import these modules in order (wait for each to complete):
    - `Az.Accounts`
    - `Az.Resources`
-> [!NOTE]  
-> Module import can take 10-15 minutes each. Wait for completion before proceeding.
+> ⚠️ **Important**: Module import can take 10-15 minutes each. Wait for completion before proceeding.
 
 ### Step 5: Create and Deploy the Runbook
 
