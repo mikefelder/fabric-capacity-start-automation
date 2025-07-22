@@ -66,8 +66,8 @@ The runbook requires Azure PowerShell modules:
 3. Import these modules in order (wait for each to complete):
    - `Az.Accounts`
    - `Az.Resources`
-
-> ⚠️ **Important**: Module import can take 10-15 minutes each. Wait for completion before proceeding.
+> [!NOTE]  
+> Module import can take 10-15 minutes each. Wait for completion before proceeding.
 
 ### Step 5: Create and Deploy the Runbook
 
@@ -91,7 +91,8 @@ The runbook requires Azure PowerShell modules:
    - **Enabled**: Yes
    - **Expires**: Set appropriate expiration date
 4. **Copy the webhook URL immediately**
-> ⚠️ **Important**: The webhook URL **cannot** be retrieved later!
+> [!WARNING]  
+> The webhook URL **cannot** be retrieved later!
 5. For parameters, enter placeholder values (these will be overridden by JSON payload):
    - **CAPACITYNAME**: `placeholder`
    - **ACTION**: `resume`
