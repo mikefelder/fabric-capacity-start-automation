@@ -75,14 +75,12 @@ The runbook requires Azure PowerShell modules:
    - **Enabled**: Yes
    - **Expires**: Set appropriate expiration date
 4. **Copy the webhook URL immediately**
-> [!WARNING]  
-> The webhook URL **cannot** be retrieved later!
+> ⚠️ **Important**: The webhook URL **cannot** be retrieved later!
 5. For parameters, enter placeholder values (these will be overridden by JSON payload):
    - **CAPACITYNAME**: `placeholder`
    - **ACTION**: `resume`
 6. Click **Create**
-> [!CAUTION]
-> Webhook URLs contain sensitive tokens. Never commit them to version control or share them publicly.
+> ‼️ **Warning**: Webhook URLs contain sensitive tokens. Never commit them to version control or share them publicly.
 
 ## Usage
 
