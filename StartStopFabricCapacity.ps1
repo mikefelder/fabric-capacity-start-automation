@@ -10,47 +10,6 @@ param(
     [object]$WebhookData
 )
 
-# Handle webhook data if called via webhook
-if ($WebhookData) {
-    Write-RunbookOutput "Processing webhook data..."
-    
-    # Parse the webhook request body
-    if ($WebhookData.RequestBody) {
-        try {
-            $webhookParams = $WebhookData.RequestBody | ConvertFrom-Json
-            $CapacityName = $webhookParams.CapacityName
-            $Action = $webhookParams.Action
-            Write-RunbookOutput "Extracted from webhook - CapacityName: $CapacityName, Action: $Action"
-        } catch {
-            Write-RunbookOutput "Failed to parse webhook request body: $($_.Exception.Message)" "Error"
-            throw "Invalid webhook request body format"
-        }
-    }
-}
-
-# Validate required parameters
-if (-not $CapacityName -or -not $Action) {
-    $errorMsg = "Missing required parameters. CapacityName: '$CapacityName', Action: '$Action'"
-    Write-RunbookOutput $errorMsg "Error"
-    throw $errorMsg
-}
-
-# Validate Action parameter
-if ($Action -notin @("suspend", "resume")) {
-    $errorMsg = "Invalid action '$Action'. Must be 'suspend' or 'resume'"
-    Write-RunbookOutput $errorMsg "Error"
-    throw $errorMsg
-}
-
-# Get runbook variables (set these in your Automation Account)
-try {
-    $SubscriptionId = Get-AutomationVariable -Name "SubscriptionId"
-    $ResourceGroupName = Get-AutomationVariable -Name "ResourceGroupName"
-} catch {
-    Write-Error "Failed to retrieve automation variables. Ensure 'SubscriptionId' and 'ResourceGroupName' are set as variables in your Automation Account."
-    throw
-}
-
 # Function for consistent output
 function Write-RunbookOutput {
     param(
@@ -59,6 +18,32 @@ function Write-RunbookOutput {
     )
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     Write-Output "[$timestamp] [$Level] $Message"
+}
+
+# Handle webhook data if called via webhook
+if ($WebhookData -and $WebhookData.RequestBody) {
+    Write-RunbookOutput "Processing webhook data..."
+    try {
+        $webhookParams = $WebhookData.RequestBody | ConvertFrom-Json -ErrorAction Stop
+        $CapacityName = $webhookParams.CapacityName
+        $Action = $webhookParams.Action
+        Write-RunbookOutput "Extracted from webhook - CapacityName: $CapacityName, Action: $Action"
+    } catch {
+        throw "Invalid webhook request body format: $($_.Exception.Message)"
+    }
+}
+
+# Validate parameters
+if (-not $CapacityName -or $Action -notin @("suspend", "resume")) {
+    throw "Invalid parameters. CapacityName: '$CapacityName', Action: '$Action' (must be 'suspend' or 'resume')"
+}
+
+# Get runbook variables (set these in your Automation Account)
+try {
+    $SubscriptionId = Get-AutomationVariable -Name "SubscriptionId" -ErrorAction Stop
+    $ResourceGroupName = Get-AutomationVariable -Name "ResourceGroupName" -ErrorAction Stop
+} catch {
+    throw "Failed to retrieve automation variables. Ensure 'SubscriptionId' and 'ResourceGroupName' are set as variables in your Automation Account: $_"
 }
 
 try {
@@ -125,12 +110,8 @@ try {
     # Execute the operation
     Write-RunbookOutput "Executing $Action operation..."
     try {
-        $response = Invoke-RestMethod -Uri $uri -Method Post -Headers $headers -ErrorAction Stop
+        Invoke-RestMethod -Uri $uri -Method Post -Headers $headers -ErrorAction Stop | Out-Null
         Write-RunbookOutput "$Action operation initiated successfully"
-        # Log additional response details if available
-        if ($response.operationId) {
-        Write-RunbookOutput "Operation ID: $($response.operationId)"
-        }
     } catch {
         $errorMsg = "Failed to $Action capacity. Error: $($_.Exception.Message)"
         if ($_.Exception.Response) {
@@ -144,17 +125,21 @@ try {
     Write-RunbookOutput "Monitoring operation progress..."
     $maxAttempts = 30  # Maximum 5 minutes (30 * 10 seconds)
     $attempts = 0
-    $expectedStates = @{
-        "resume" = @("Resuming", "Active")
-        "suspend" = @("Suspending", "Paused")
-    }
     $finalState = if ($Action -eq "resume") { "Active" } else { "Paused" }
+    $transitionalStates = @("Resuming", "Suspending")
+    
+    # Resource parameters for consistent use
+    $resourceParams = @{
+        ResourceGroupName = $ResourceGroupName
+        Name = $CapacityName
+        ResourceType = "Microsoft.Fabric/capacities"
+    }
     
     do {
         Start-Sleep -Seconds 10
         $attempts++
         
-        $capacity = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $CapacityName -ResourceType "Microsoft.Fabric/capacities"
+        $capacity = Get-AzResource @resourceParams
         $currentState = $capacity.Properties.state
         Write-RunbookOutput "Attempt $attempts - Current state: $currentState"
         
@@ -169,7 +154,7 @@ try {
             break
         }
         
-    } while ($currentState -in $expectedStates[$Action])
+    } while ($currentState -in $transitionalStates)
 
     # Return result object for webhook response
     $result = @{
@@ -181,7 +166,6 @@ try {
         }
         CapacityName = $CapacityName
         Action = $Action
-        InitialState = $capacity.Properties.state
         FinalState = $currentState
         Duration = "$($attempts * 10) seconds"
     }
