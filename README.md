@@ -1,6 +1,6 @@
 # Azure Fabric Capacity Start/Stop Automation
 
-A complete solution for automating Azure Fabric capacity start/stop operations using Azure Runbooks and webhooks. This enables cost optimization by programmatically controlling Fabric capacities through HTTP requests, Power Automate flows, or any system that can make REST API calls.
+> A complete solution for automating Azure Fabric capacity start/stop operations using Azure Runbooks and webhooks. This enables cost optimization by programmatically controlling Fabric capacities through HTTP requests, Power Automate flows, or any system that can make REST API calls.
 
 ## Overview
 
