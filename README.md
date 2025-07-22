@@ -90,7 +90,8 @@ The runbook requires Azure PowerShell modules:
    - **Name**: `FabricCapacityWebhook`
    - **Enabled**: Yes
    - **Expires**: Set appropriate expiration date
-4. **Copy the webhook URL immediately** - you cannot retrieve it later!
+4. **Copy the webhook URL immediately**
+> ⚠️ **Important**: The webhook URL **cannot** be retrieved later!
 5. For parameters, enter placeholder values (these will be overridden by JSON payload):
    - **CAPACITYNAME**: `placeholder`
    - **ACTION**: `resume`
