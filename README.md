@@ -97,6 +97,8 @@ The runbook requires Azure PowerShell modules:
    - **CAPACITYNAME**: `placeholder`
    - **ACTION**: `resume`
 6. Click **Create**
+> [!CAUTION]
+> Webhook URLs contain sensitive tokens. Never commit them to version control or share them publicly.
 
 ## Usage
 
@@ -165,26 +167,6 @@ To use this in Power Automate flows:
 2. Find your job by Job ID or timestamp
 3. Click the job to view detailed output and any errors
 
-### Common Issues and Solutions
-
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| "Capacity not found" | Incorrect capacity name or resource group | Verify `ResourceGroupName` variable and capacity name |
-| "Access denied" | Missing permissions | Ensure Managed Identity has Contributor role on resource group |
-| "Module not found" | Missing PowerShell modules | Import `Az.Accounts` and `Az.Resources` modules |
-| "Invalid webhook request" | Malformed JSON | Verify JSON syntax and Content-Type header |
-| Using placeholder values | Webhook data not processed | Ensure runbook code handles `$WebhookData` parameter |
-
-
-## Security Best Practices
-
-- **Webhook URL Security**: Store webhook URLs securely (Azure Key Vault, environment variables)
-- **Access Control**: Limit access to webhook URLs
-- **Expiration Management**: Set reasonable expiration dates and rotate regularly
-- **Monitoring**: Monitor webhook usage through Automation Account logs
-- **Principle of Least Privilege**: Grant minimal required permissions to Managed Identity
-
-
 ## API Reference
 
 ### Request Parameters
@@ -194,21 +176,7 @@ To use this in Power Automate flows:
 | `CapacityName` | String | Yes | Name of the Fabric capacity to control |
 | `Action` | String | Yes | Either "suspend" or "resume" |
 
-## Runbook Script
-
-The complete PowerShell runbook script handles:
-- Webhook data processing
-- Parameter validation
-- Azure authentication via Managed Identity
-- Fabric capacity state management
-- Detailed logging and error handling
-- Operation monitoring and status reporting
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-
----
-
-**Note**: Webhook URLs contain sensitive tokens. Never commit them to version control or share them publicly.
