@@ -177,10 +177,14 @@ To use this in Power Automate flows:
 
 The runbook provides detailed timestamped logging:
 ```
-[2025-07-22 16:38:54] [Information] Starting Fabric capacity operation: resume on felderfabcap001
-[2025-07-22 16:38:55] [Information] Current capacity state: Paused
-[2025-07-22 16:38:56] [Information] Executing resume operation...
-[2025-07-22 16:39:10] [Information] ✓ Operation completed successfully! Capacity is now: Active
+[2024-01-15 16:38:54] [Information] Starting Fabric capacity operation: resume on your-fabric-capacity
+[2024-01-15 16:38:55] [Information] Current capacity state: Paused
+[2024-01-15 16:38:56] [Information] Executing resume operation...
+[2024-01-15 16:38:57] [Information] resume operation initiated successfully
+[2024-01-15 16:39:08] [Information] Attempt 1 - Current state: Resuming
+[2024-01-15 16:39:18] [Information] Attempt 2 - Current state: Active
+[2024-01-15 16:39:18] [Information] ✓ Operation completed successfully! Capacity is now: Active
+[2024-01-15 16:39:19] [Information] Operation summary: {"Status":"Success","Message":"Capacity resume operation completed successfully","CapacityName":"your-fabric-capacity","Action":"resume","FinalState":"Active","Duration":"20 seconds"}
 ```
 
 ## Security Best Practices
