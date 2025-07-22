@@ -173,19 +173,6 @@ To use this in Power Automate flows:
 | "Invalid webhook request" | Malformed JSON | Verify JSON syntax and Content-Type header |
 | Using placeholder values | Webhook data not processed | Ensure runbook code handles `$WebhookData` parameter |
 
-### Log Analysis
-
-The runbook provides detailed timestamped logging:
-```
-[2024-01-15 16:38:54] [Information] Starting Fabric capacity operation: resume on your-fabric-capacity
-[2024-01-15 16:38:55] [Information] Current capacity state: Paused
-[2024-01-15 16:38:56] [Information] Executing resume operation...
-[2024-01-15 16:38:57] [Information] resume operation initiated successfully
-[2024-01-15 16:39:08] [Information] Attempt 1 - Current state: Resuming
-[2024-01-15 16:39:18] [Information] Attempt 2 - Current state: Active
-[2024-01-15 16:39:18] [Information] ✓ Operation completed successfully! Capacity is now: Active
-[2024-01-15 16:39:19] [Information] Operation summary: {"Status":"Success","Message":"Capacity resume operation completed successfully","CapacityName":"your-fabric-capacity","Action":"resume","FinalState":"Active","Duration":"20 seconds"}
-```
 
 ## Security Best Practices
 
@@ -195,13 +182,6 @@ The runbook provides detailed timestamped logging:
 - **Monitoring**: Monitor webhook usage through Automation Account logs
 - **Principle of Least Privilege**: Grant minimal required permissions to Managed Identity
 
-## Cost Optimization
-
-This solution enables significant cost savings by:
-- **Automated Scheduling**: Stop capacities during non-business hours
-- **Event-Driven Control**: Start/stop based on usage patterns
-- **Integration**: Connect with monitoring systems to respond to utilization metrics
-- **Workflow Integration**: Embed capacity control in broader automation workflows
 
 ## API Reference
 
@@ -211,13 +191,6 @@ This solution enables significant cost savings by:
 |-----------|------|----------|-------------|
 | `CapacityName` | String | Yes | Name of the Fabric capacity to control |
 | `Action` | String | Yes | Either "suspend" or "resume" |
-
-### Response Codes
-
-- **200 OK**: Request accepted, job initiated
-- **400 Bad Request**: Invalid JSON or missing parameters
-- **401 Unauthorized**: Invalid webhook token
-- **500 Internal Server Error**: Runbook execution error
 
 ## Runbook Script
 
@@ -229,30 +202,10 @@ The complete PowerShell runbook script handles:
 - Detailed logging and error handling
 - Operation monitoring and status reporting
 
-## Contributing
-
-1. Fork this repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly with your Automation Account
-5. Submit a pull request
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Support
-
-For issues or questions:
-1. Check the troubleshooting section above
-2. Review Azure Automation Account job logs
-3. Verify all prerequisites are met
-4. Open an issue in this repository with detailed logs
-
-## Version History
-
-- **v2.0**: Added webhook support and Power Automate integration
-- **v1.0**: Initial PowerShell script for direct execution
 
 ---
 
