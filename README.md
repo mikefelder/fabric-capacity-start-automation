@@ -3,12 +3,7 @@
 > A complete solution for automating Azure Fabric capacity start/stop operations using Azure Runbooks and webhooks. This enables cost optimization by programmatically controlling Fabric capacities through HTTP requests, Power Automate flows, or any system that can make REST API calls.
 
 ## Flow
-```
-flowchart LR
-    A[External System / Power Automate<br/>(suspend/resume command)] --> B[Webhook (Azure Automation)]
-    B --> C[Azure Runbook]
-    C --> D[Fabric Capacity API]
-    D --> E[Fabric Capacity Resource in Azure]```
+```External Request (suspend/resume) → Webhook → Azure Runbook → Fabric Capacity API → Azure Fabric Capacity```
 
 The solution uses Azure Managed Identity for secure authentication, eliminating the need for stored credentials.
 
